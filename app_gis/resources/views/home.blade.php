@@ -31,14 +31,16 @@ UAS WEB GIS
 </body>
 
 <script>
-    var map = L.map('map').setView([-0.0244467,109.339112], 13);
+    var map = L.map('map').setView([-0.0240613,109.3467576], 16);
     
-    // google 
-    L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
-        maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3']
+    // Basemap Google
+    // Hybrid: s,h; Satellite: s; Streets: m; Terrain: p;
+    L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+        maxZoom: 20,
+        subdomains:['mt0','mt1','mt2','mt3']
     }).addTo(map);
 
-    // esri
+    // Basemap Esri
     // L.esri.basemapLayer('Topographic').addTo(map);
 
     /* Basemap MapBox (openstreet)
@@ -51,6 +53,15 @@ UAS WEB GIS
 		zoomOffset: -1
 	}).addTo(map);
     */
+    
+    var myIcon = L.icon({
+        iconUrl: 'assets/icons/repair.png',
+        iconSize: [30, 30],
+        iconAnchor: [0,20],
+        popupAnchor: [-3, -76],
+    });
+
+    L.marker([-0.0240613,109.3467576], {icon: myIcon}).addTo(map);
 </script>
 
 </html>
