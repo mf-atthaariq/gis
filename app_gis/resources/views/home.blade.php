@@ -20,7 +20,10 @@
     <script src="https://unpkg.com/esri-leaflet@3.0.8/dist/esri-leaflet.js"
     integrity="sha512-E0DKVahIg0p1UHR2Kf9NX7x7TUewJb30mxkxEm2qOYTVJObgsAGpEol9F6iK6oefCbkJiA4/i6fnTHzM6H1kEA=="
     crossorigin=""></script>
-
+    
+    <!-- JQuery 3.6.0 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <style>
        #map { height: 600px; }
     </style>
@@ -31,7 +34,7 @@ UAS WEB GIS
 </body>
 
 <script>
-    var map = L.map('map').setView([-0.0240613,109.3467576], 16);
+    var map = L.map('map').setView([-0.0240613,109.3467576], 14);
     
     // Basemap Google
     // Hybrid: s,h; Satellite: s; Streets: m; Terrain: p;
@@ -60,8 +63,27 @@ UAS WEB GIS
         iconAnchor: [0,20],
         popupAnchor: [-3, -76],
     });
+    //var maker = L.marker([-0.0240613,109.3467576], {icon: myIcon}).addTo(map).on('click', function(e) {
+    //    alert(e.LatLng);});
+    
+    // marker
+    // L.marker([-0.0240613,109.3467576], {icon: myIcon}).addTo(map);
 
-    L.marker([-0.0240613,109.3467576], {icon: myIcon}).addTo(map);
+    $( document ).ready(function() {
+        $.getJSON('titik/json', function(data) {
+            $.each(data, function(index) {
+                // alert(data[index].nama)
+                var myIcon = L.icon({
+                    iconUrl: 'assets/icons/repair.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [0,20],
+                    popupAnchor: [-3, -76],
+                });
+                L.marker([parseFloat(data[index].lat),parseFloat(data[index].lng)],{icon:myIcon}).addTo(map);
+            })
+        });
+
+    });
 </script>
 
 </html>

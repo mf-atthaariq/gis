@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\TitikController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/',[TitikController::class,'index']);
+Route::get('/titik/json',[TitikController::class,'titik']);
+# Route::get('/', function () {return view('home');});
