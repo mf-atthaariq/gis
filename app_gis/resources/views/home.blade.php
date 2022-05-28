@@ -34,11 +34,11 @@ UAS WEB GIS
 </body>
 
 <script>
-    var map = L.map('map').setView([-0.0240613,109.3467576], 14);
+    var map = L.map('map').setView([-0.0240613,109.3467576], 13);
     
     // Basemap Google
     // Hybrid: s,h; Satellite: s; Streets: m; Terrain: p;
-    L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+    L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
         maxZoom: 20,
         subdomains:['mt0','mt1','mt2','mt3']
     }).addTo(map);
@@ -82,7 +82,24 @@ UAS WEB GIS
                 L.marker([parseFloat(data[index].lat),parseFloat(data[index].lng)],{icon:myIcon}).addTo(map);
             })
         });
+    });
 
+    // GeoJSON
+    $.getJSON('assets/geojson/map.geojson', function(json) {
+        geoLayer = L.geoJSON(json, {
+            style: function(feature) {
+                return {
+                    fillOpacity: 0.3,
+                    weight: 3,
+                    opacity: 1,
+                    color: "#f5ca9d"
+                };
+            },
+
+            onEachFeature: function(feature, layer){
+                layer.addTo(map);
+            }
+        });
     });
 </script>
 
