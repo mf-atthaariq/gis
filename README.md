@@ -7,4 +7,4 @@ Kelompok Fasilitas Bengkel:
 1. M. Faturachman A.
 2. Riyan Hernandi
 
-Simple WEBGIS using Leaflet + Laravel 8, serve in WAMP.
+Simple WEBGIS using Leaflet + Laravel 8, served in WAMP.
