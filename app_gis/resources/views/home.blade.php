@@ -26,6 +26,12 @@
     
     <style>
        #map { height: 600px; }
+
+       .label-bidang {
+           font-size: 8pt;
+           color: #ffffff;
+           text-align: center;
+       }
     </style>
 </head>
 <body>
@@ -92,11 +98,21 @@ UAS WEB GIS
                     fillOpacity: 0.3,
                     weight: 3,
                     opacity: 1,
-                    color: "#f5ca9d"
+                    color: "#f5ca9d",
+
+                    dashArray: "10 15",
+                    lineCap: "square"
                 };
             },
 
             onEachFeature: function(feature, layer){
+                var iconLabel = L.divIcon({
+                    className: 'label-bidang',
+                    html: '<b>'+feature.properties.nama+'</b>',
+                    iconSize: [100, 20]
+                });
+                L.marker(layer.getBounds().getCenter(),{icon:iconLabel}).addTo(map);
+                // alert(feature.properties.nama)
                 layer.addTo(map);
             }
         });
