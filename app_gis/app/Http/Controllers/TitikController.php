@@ -13,7 +13,8 @@ class TitikController extends Controller
     }
 
     public function index(){
-        return view('home');
+        $results=$this->TitikModel->allLokasi();
+        return view('home',['lokasi'=>$results]);
     }
 
     public function allTitik(){

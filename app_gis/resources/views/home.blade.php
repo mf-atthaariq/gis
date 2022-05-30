@@ -35,8 +35,29 @@
     </style>
 </head>
 <body>
-UAS WEB GIS
-<div id="map"></div>
+    UAS WEB GIS 2022<br>
+    <!-- NAMA 
+    <ol>
+        <li>M. Faturachman Atthaariq</li>
+        <li>Riyan Hernandi</li>
+    </ol>
+    -->
+    <p>KLIK TOMBOL DI BAWAH UNTUK MENDAPATKAN LOKASI ANDA</p>
+    <button onclick="getLocation()">LOKASI</button>
+    <p id="demo"></p>
+
+    <div>
+        <p>Cari lokasi:
+        <select>
+            @foreach($lokasi as $d)
+            <option value="{{ $d -> id }}">{{ $d -> nama }}</option>
+            @endforeach
+        </select>
+        </p>
+    </div>
+
+    <div id="map"></div>
+
 </body>
 
 <script>
@@ -48,7 +69,7 @@ UAS WEB GIS
         maxZoom: 20,
         subdomains:['mt0','mt1','mt2','mt3']
     }).addTo(map);
-
+    
     // Basemap Esri
     // L.esri.basemapLayer('Topographic').addTo(map);
 
@@ -69,7 +90,6 @@ UAS WEB GIS
     
     // marker
     // L.marker([-0.0240613,109.3467576], {icon: myIcon}).addTo(map);
-
     // GeoJSON PETA PNK
     $.getJSON('assets/geojson/map.geojson', function(json) {
         geoLayer = L.geoJSON(json, {
@@ -103,6 +123,31 @@ UAS WEB GIS
         });
     });
 
+    // LOKASI USER SEKARANG
+    var x = document.getElementById("demo");
+
+    function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+    }
+
+    function showPosition(position) {
+    x.innerHTML = "Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude;
+
+    var theIcon = L.icon({
+        iconUrl: 'assets/icons/youarehere.png',
+        iconSize: [40, 40],
+        iconAnchor: [0,50],
+        popupAnchor: [0,0],
+    });
+
+    L.marker([position.coords.latitude,position.coords.longitude],{icon: theIcon}).addTo(map);
+    };
+    
 /*
     // TITIK
     $( document ).ready(function() {
@@ -137,13 +182,7 @@ UAS WEB GIS
             },
 
             onEachFeature: function(feature, layer){
-                /*
-                var html = 'Nama: ' + feature.properties.nama;
-                    html +='Foto: ' + '<img height="100px" src="assets/images/'+detail[index].foto+'">';
                 
-                
-                layer.bindPopup(html);
-                */
                 /*
                 layer.on('click', (e)=>{
                     $.getJSON('titik/'+feature.properties.id, function(json) {
@@ -176,7 +215,14 @@ UAS WEB GIS
                         })
                     })
                     
-                    alert('Nama: '+feature.properties.nama+'\nFoto: <img height="100px" src="assets/images/'+feature.properties.foto+'.jpg">');
+                    var popupContent = 'Nama: ' + feature.properties.nama;
+                        popupContent +='<br>Tipe: '+ feature.properties.tipe;
+                        popupContent +='<br>Foto: ' + '<img width="150px" src="assets/images/'+feature.properties.foto+'.jpg">';
+                    
+                    layer.bindPopup(popupContent);
+                    //layer.bindPopup('Nama: '+feature.properties.nama+'<br>Foto: <img height="100px" src="assets/images/'+feature.properties.foto+'.jpg">');
+                    
+                    // alert('Nama: '+feature.properties.nama+'\nFoto: <img height="100px" src="assets/images/'+feature.properties.foto+'.jpg">');
                 })
                 
                 layer.addTo(map);

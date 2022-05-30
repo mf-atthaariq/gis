@@ -22,4 +22,11 @@ class TitikModel extends Model
              ->get();
         return $results;
     }
+
+    public function allLokasi(){
+        $results = DB::table('tbl_titik')
+             ->select('id','nama')
+             ->get();
+        return $results;
+    }
 }
