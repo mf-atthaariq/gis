@@ -63,34 +63,14 @@ UAS WEB GIS
 	}).addTo(map);
     */
     
-    var myIcon = L.icon({
-        iconUrl: 'assets/icons/repair.png',
-        iconSize: [30, 30],
-        iconAnchor: [0,20],
-        popupAnchor: [-3, -76],
-    });
+    
     //var maker = L.marker([-0.0240613,109.3467576], {icon: myIcon}).addTo(map).on('click', function(e) {
     //    alert(e.LatLng);});
     
     // marker
     // L.marker([-0.0240613,109.3467576], {icon: myIcon}).addTo(map);
 
-    $( document ).ready(function() {
-        $.getJSON('titik/json', function(data) {
-            $.each(data, function(index) {
-                // alert(data[index].nama)
-                var myIcon = L.icon({
-                    iconUrl: 'assets/icons/repair.png',
-                    iconSize: [30, 30],
-                    iconAnchor: [0,20],
-                    popupAnchor: [-3, -76],
-                });
-                L.marker([parseFloat(data[index].lat),parseFloat(data[index].lng)],{icon:myIcon}).addTo(map);
-            })
-        });
-    });
-
-    // GeoJSON
+    // GeoJSON PETA PNK
     $.getJSON('assets/geojson/map.geojson', function(json) {
         geoLayer = L.geoJSON(json, {
             style: function(feature) {
@@ -100,8 +80,8 @@ UAS WEB GIS
                     opacity: 1,
                     color: "#f5ca9d",
 
-                    dashArray: "10 15",
-                    lineCap: "square"
+                    dashArray: "8 15",
+                    lineCap: "round"
                 };
             },
 
@@ -113,10 +93,96 @@ UAS WEB GIS
                 });
                 L.marker(layer.getBounds().getCenter(),{icon:iconLabel}).addTo(map);
                 // alert(feature.properties.nama)
+                
+                // layer.on('click',(e)=>{
+                //     alert(feature.properties.nama);
+                // })
+                
                 layer.addTo(map);
             }
         });
     });
-</script>
 
+/*
+    // TITIK
+    $( document ).ready(function() {
+        $.getJSON('titik/data', function(data) {
+            // ambil semua data titik
+            $.each(data, function(index) {
+                // alert(data[index].nama)
+                var myIcon = L.icon({
+                    iconUrl: 'assets/icons/repair.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [0,20],
+                    popupAnchor: [-3, -76],
+                });
+                L.marker([parseFloat(data[index].lat),parseFloat(data[index].lng)],{icon:myIcon}).addTo(map);
+                
+            })
+        });
+    });
+*/
+    var myIcon = L.icon({
+        iconUrl: 'assets/icons/repair.png',
+        iconSize: [30, 30],
+        iconAnchor: [0,20],
+        popupAnchor: [-3, -76],
+    });
+
+    //GeoJSON TITIK
+    $.getJSON('assets/geojson/titik.geojson', function(json) {
+        geoLayer = L.geoJSON(json, {
+            pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {icon: myIcon});
+            },
+
+            onEachFeature: function(feature, layer){
+                /*
+                var html = 'Nama: ' + feature.properties.nama;
+                    html +='Foto: ' + '<img height="100px" src="assets/images/'+detail[index].foto+'">';
+                
+                
+                layer.bindPopup(html);
+                */
+                /*
+                layer.on('click', (e)=>{
+                    $.getJSON('titik/'+feature.properties.id, function(json) {
+                        $.each(data, function(index) {
+                            alert(detail[index].nama);
+                        })
+                    })
+                })
+                */
+                // alert(feature.properties.nama)
+                var myIcon = L.icon({
+                    iconUrl: 'assets/icons/repair.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [0,20],
+                    popupAnchor: [-3, -76],
+                });
+
+                layer.on('click',(e)=>{
+                    $( document ).ready(function() {
+                        $.getJSON('titik/'+feature.properties.id, function(detail) {
+                            $.each(detail, function(index) {
+                                
+                                var html='Nama: '+detail[index],nama;
+                                L.popup()
+                                    .setLatLng(latlng)
+                                    .setContent(html)
+                                    .openOn(map);
+
+                            })
+                        })
+                    })
+                    
+                    alert('Nama: '+feature.properties.nama+'\nFoto: <img height="100px" src="assets/images/'+feature.properties.foto+'.jpg">');
+                })
+                
+                layer.addTo(map);
+            }
+        });
+    });
+
+</script>
 </html>

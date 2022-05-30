@@ -10,7 +10,15 @@ class TitikModel extends Model
 {
     public function allData(){
         $results = DB::table('tbl_titik')
-             ->select('nama','lat','lng')
+             ->select('id','nama','lat','lng','foto')
+             ->get();
+        return $results;
+    }
+
+    public function getTitik($id=''){
+        $results = DB::table('tbl_titik')
+             ->select('nama','lat','lng','foto')
+             ->where('id',$id)
              ->get();
         return $results;
     }

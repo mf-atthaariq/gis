@@ -16,8 +16,13 @@ class TitikController extends Controller
         return view('home');
     }
 
-    public function titik(){
+    public function allTitik(){
         $results=$this->TitikModel->allData();
+        return json_encode($results);
+    }
+
+    public function titik($id=''){
+        $results=$this->TitikModel->getTitik($id);
         return json_encode($results);
     }
 }

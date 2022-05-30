@@ -13,5 +13,6 @@ use App\Http\Controllers\TitikController;
 |
 */
 Route::get('/',[TitikController::class,'index']);
-Route::get('/titik/json',[TitikController::class,'titik']);
+Route::get('/titik/data',[TitikController::class,'allTitik']);
+Route::get('/titik/{id}',[TitikController::class,'titik']);
 # Route::get('/', function () {return view('home');});
