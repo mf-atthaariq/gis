@@ -25,7 +25,7 @@ class TitikModel extends Model
 
     public function allLokasi(){
         $results = DB::table('tbl_titik')
-             ->select('id','nama')
+             ->select('id','nama','lat','lng')
              ->get();
         return $results;
     }

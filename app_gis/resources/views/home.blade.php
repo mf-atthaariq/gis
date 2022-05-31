@@ -48,7 +48,7 @@
 
     <div>
         <p>Cari lokasi:
-        <select>
+        <select onchange="cari(this.value)">
             @foreach($lokasi as $d)
             <option value="{{ $d -> id }}">{{ $d -> nama }}</option>
             @endforeach
@@ -62,18 +62,18 @@
 
 <script>
     var map = L.map('map').setView([-0.0240613,109.3467576], 13);
-    
+    /*
     // Basemap Google
     // Hybrid: s,h; Satellite: s; Streets: m; Terrain: p;
     L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
         maxZoom: 20,
         subdomains:['mt0','mt1','mt2','mt3']
     }).addTo(map);
-    
+    */
     // Basemap Esri
     // L.esri.basemapLayer('Topographic').addTo(map);
 
-    /* Basemap MapBox (openstreet)
+    // Basemap MapBox (openstreet)
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
 		maxZoom: 18,
 		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
@@ -82,7 +82,7 @@
 		tileSize: 512,
 		zoomOffset: -1
 	}).addTo(map);
-    */
+    
     
     
     //var maker = L.marker([-0.0240613,109.3467576], {icon: myIcon}).addTo(map).on('click', function(e) {
@@ -175,6 +175,7 @@
     });
 
     //GeoJSON TITIK
+    var geoLayer;
     $.getJSON('assets/geojson/titik.geojson', function(json) {
         geoLayer = L.geoJSON(json, {
             pointToLayer: function (feature, latlng) {
