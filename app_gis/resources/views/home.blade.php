@@ -24,6 +24,14 @@
     <!-- JQuery 3.6.0 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
+    <!-- masi error 
+    <link rel="stylesheet" href="https://opengeo.tech/maps/leaflet-search/examples/style.css" />
+    <script src=https://opengeo.tech/maps/leaflet-search/src/leaflet-search.js></script>
+
+    <script src="http://mrmufflon.github.io/Leaflet.Coordinates/dist/Leaflet.Coordinates-0.1.3.min.js"></script>
+    <link rel="stylesheet" href="http://mrmufflon.github.io/Leaflet.Coordinates/dist/Leaflet.Coordinates-0.1.3.css"/>
+    -->
+
     <style>
        #map { height: 600px; }
 
@@ -31,6 +39,16 @@
            font-size: 8pt;
            color: #ffffff;
            text-align: center;
+       }
+       html, body, #map {
+	      height:90%;
+	      width:100%;
+	      padding:0px;
+	      margin:0px;
+	   }
+       .legend{
+           background: white;
+           padding: 10px;
        }
     </style>
 </head>
@@ -47,16 +65,18 @@
     <p id="demo"></p>
 
     <div>
-        <p>Cari lokasi:
-        <select onchange="cari(this.value)">
-            @foreach($lokasi as $d)
-            <option value="{{ $d -> id }}">{{ $d -> nama }}</option>
-            @endforeach
-        </select>
-        </p>
+        
     </div>
 
-    <div id="map"></div>
+    <div id="map">
+        <p>Cari lokasi:
+            <select onchange="cari(this.value)">
+                @foreach($lokasi as $d)
+                <option value="{{ $d -> id }}">{{ $d -> nama }}</option>
+                @endforeach
+            </select>
+        </p>
+    </div>
 
 </body>
 
@@ -75,7 +95,7 @@
 
     // Basemap MapBox (openstreet)
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-		maxZoom: 18,
+		maxZoom: 20,
 		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
 			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
 		id: 'mapbox/streets-v11',
@@ -98,7 +118,7 @@
                     fillOpacity: 0.3,
                     weight: 3,
                     opacity: 1,
-                    color: "#f5ca9d",
+                    color: "brown",
 
                     dashArray: "8 15",
                     lineCap: "round"
@@ -149,7 +169,7 @@
     };
     
 /*
-    // TITIK
+    // TITIK dari database
     $( document ).ready(function() {
         $.getJSON('titik/data', function(data) {
             // ambil semua data titik
@@ -202,34 +222,62 @@
                 });
 
                 layer.on('click',(e)=>{
-                    $( document ).ready(function() {
-                        $.getJSON('titik/'+feature.properties.id, function(detail) {
-                            $.each(detail, function(index) {
-                                
-                                var html='Nama: '+detail[index],nama;
-                                L.popup()
-                                    .setLatLng(latlng)
-                                    .setContent(html)
-                                    .openOn(map);
-
-                            })
-                        })
-                    })
                     
                     var popupContent = 'Nama: ' + feature.properties.nama;
                         popupContent +='<br>Tipe: '+ feature.properties.tipe;
-                        popupContent +='<br>Foto: ' + '<img width="150px" src="assets/images/'+feature.properties.foto+'.jpg">';
+                        popupContent +='<br>Coord: '+ feature.geometry.coordinates;
+                        popupContent +='<br>Foto: <img width="150px" src="assets/images/'+feature.properties.foto+'.jpg">';
                     
                     layer.bindPopup(popupContent);
+                    map.flyTo([feature.geometry.coordinates[1],feature.geometry.coordinates[0]],17);
                     //layer.bindPopup('Nama: '+feature.properties.nama+'<br>Foto: <img height="100px" src="assets/images/'+feature.properties.foto+'.jpg">');
                     
                     // alert('Nama: '+feature.properties.nama+'\nFoto: <img height="100px" src="assets/images/'+feature.properties.foto+'.jpg">');
                 })
-                
                 layer.addTo(map);
             }
         });
     });
 
+    var legend = L.control({position: 'topright'});
+
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div','legend');
+
+        labels = ['<strong>Keterangan: </strong>'],
+        categories = ['Area Pontianak', 'Bengkel', 'Lokasi Kita'];
+        for (var i = 0; i < categories.length; i++){
+            if (i==0){
+                div.innerHTML += 
+                    labels.push('<img width="20" height="20" src="assets/icons/area.png"><i class="circle" style="background:#000000"></i>'+(categories[i] ? categories[i] : '+'));
+            }
+            else if (i==1){
+                div.innerHTML += 
+                    labels.push('<img width="20" height="23" src="assets/icons/repair.png"><i class="circle" style="background:#000000"></i>'+(categories[i] ? categories[i] : '+'));
+            }else{
+                div.innerHTML += 
+                    labels.push('<img width="20" height="23" src="assets/icons/youarehere.png"><i class="circle" style="background:#000000"></i>'+(categories[i] ? categories[i] : '+'));
+            }
+        }
+        div.innerHTML = labels.join('<br>');
+    return div;
+    };
+    legend.addTo(map);
+    
+    function cari(id) {
+        $.getJSON('assets/geojson/titik.geojson', function(json) {
+            geoLayer.eachLayer(function(layer){
+                geoLayer = L.geoJSON(json, {
+                    onEachFeature: function(feature, layer){
+                        if(feature.properties.id==id){
+                            map.flyTo([-0.07082182,109.3415814],17);
+                            // layer.bindPopup(layer.feature.properties.nama);
+                        }
+                
+                    }
+                });
+            });
+        });
+    }
 </script>
 </html>
