@@ -167,7 +167,7 @@
         iconAnchor: [0,50],
         popupAnchor: [0,0],
     });
-
+    map.flyTo([position.coords.latitude,position.coords.longitude],16);
     L.marker([position.coords.latitude,position.coords.longitude],{icon: theIcon}).addTo(map);
     };
     
@@ -225,7 +225,7 @@
                 });
 
                 layer.on('click',(e)=>{
-                    map.flyTo([feature.geometry.coordinates[1],feature.geometry.coordinates[0]],17);
+                    map.flyTo([feature.geometry.coordinates[1],feature.geometry.coordinates[0]],16);
 
                     var popupContent = 'Nama: ' + feature.properties.nama;
                         popupContent +='<br>Tipe: '+ feature.properties.tipe;
