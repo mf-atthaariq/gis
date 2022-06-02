@@ -31,6 +31,9 @@
     <script src="http://mrmufflon.github.io/Leaflet.Coordinates/dist/Leaflet.Coordinates-0.1.3.min.js"></script>
     <link rel="stylesheet" href="http://mrmufflon.github.io/Leaflet.Coordinates/dist/Leaflet.Coordinates-0.1.3.css"/>
     -->
+    <!-- Routing Machine -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 
     <style>
        #map { height: 600px; }
@@ -222,14 +225,16 @@
                 });
 
                 layer.on('click',(e)=>{
-                    
+                    map.flyTo([feature.geometry.coordinates[1],feature.geometry.coordinates[0]],17);
+
                     var popupContent = 'Nama: ' + feature.properties.nama;
                         popupContent +='<br>Tipe: '+ feature.properties.tipe;
                         popupContent +='<br>Coord: '+ feature.geometry.coordinates;
-                        popupContent +='<br>Foto: <img width="150px" src="assets/images/'+feature.properties.foto+'.jpg">';
+                        popupContent +='<br>Foto:' + '<br> <img width="150px" src="assets/images/'+feature.properties.foto+'.jpg">';
+                        popupContent +='<br> <button onclick="return keSini(-0.029233276,109.3047786)"> Ke Sini </button>';
                     
                     layer.bindPopup(popupContent);
-                    map.flyTo([feature.geometry.coordinates[1],feature.geometry.coordinates[0]],17);
+                    
                     //layer.bindPopup('Nama: '+feature.properties.nama+'<br>Foto: <img height="100px" src="assets/images/'+feature.properties.foto+'.jpg">');
                     
                     // alert('Nama: '+feature.properties.nama+'\nFoto: <img height="100px" src="assets/images/'+feature.properties.foto+'.jpg">');
@@ -239,7 +244,7 @@
         });
     });
 
-    var legend = L.control({position: 'topright'});
+    var legend = L.control({position: 'bottomleft'});
 
     legend.onAdd = function (map) {
         var div = L.DomUtil.create('div','legend');
@@ -263,7 +268,22 @@
     return div;
     };
     legend.addTo(map);
-    
+
+    // routing
+    var control = L.Routing.control({
+    waypoints: [
+        L.latLng(-0.03594107, 109.3184981),
+        L.latLng(-0.07082182, 109.3415814)
+        ],
+        routeWhileDragging: true
+    })
+    control.addTo(map);
+
+    function keSini(lat,lng){
+        var latlng = L.latLng(lat,lng)
+        control.spliceWaypoints(control.getWaypoints().length - 1, 1, latlng);
+    }
+
     function cari(id) {
         $.getJSON('assets/geojson/titik.geojson', function(json) {
             geoLayer.eachLayer(function(layer){
