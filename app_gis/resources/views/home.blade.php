@@ -164,11 +164,25 @@
     var theIcon = L.icon({
         iconUrl: 'assets/icons/youarehere.png',
         iconSize: [40, 40],
-        iconAnchor: [0,50],
         popupAnchor: [0,0],
     });
     map.flyTo([position.coords.latitude,position.coords.longitude],16);
     L.marker([position.coords.latitude,position.coords.longitude],{icon: theIcon}).addTo(map);
+
+    // ROUTING
+    var control = L.Routing.control({
+    waypoints: [
+        L.latLng(position.coords.latitude,position.coords.longitude),
+        L.latLng(-0.07082182, 109.3415814)
+        ],
+        routeWhileDragging: true
+    })
+    control.addTo(map);
+
+    function keSini(lat,lng){
+        var latlng = L.latLng(lat,lng)
+        control.spliceWaypoints(control.getWaypoints().length - 1, 1, latlng);
+    }
     };
     
 /*
@@ -268,8 +282,8 @@
     return div;
     };
     legend.addTo(map);
-
-    // routing
+/*
+    // ROUTING
     var control = L.Routing.control({
     waypoints: [
         L.latLng(-0.03594107, 109.3184981),
@@ -283,7 +297,8 @@
         var latlng = L.latLng(lat,lng)
         control.spliceWaypoints(control.getWaypoints().length - 1, 1, latlng);
     }
-
+*/
+    // CARI
     function cari(id) {
         $.getJSON('assets/geojson/titik.geojson', function(json) {
             geoLayer.eachLayer(function(layer){
